@@ -4,6 +4,8 @@ var orm = {
     selectAll: function(table, cb) {
     	var query = "SELECT * FROM " + table;
 
+        console.log(query);
+
     	connection.query(query, function(err, results){
     		if (err) throw err;
 
@@ -12,10 +14,25 @@ var orm = {
     },
     insertOne: function(table, cols, values, cb) {
     	//INSERT INTO tablename (variables) VALUES (values)
-    	var query = "INSERT INTO " + table + " cols";
+    	var query = "INSERT INTO ";
+        query += table;
+        query += " (" + cols.toString() + ") ";
+        query += "VALUES";
+        query += " (" + values.toString() + ") ";
+
+        console.log(query);
+
+        connection.query(query, function(err, results){
+            if (err) throw err;
+
+            cb(results);
+        });
     },
     updateOne: function() {
-    	var query;
+        //UPDATE tablename SET 
+    	var query = ;
+
+        console.log(query);
     }
 };
 
