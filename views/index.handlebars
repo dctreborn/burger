@@ -1,0 +1,15 @@
+<h1>Eat-Da-Burger!</h1>
+
+<h2>Burgers to Devour</h2>
+
+<ul>
+	{{#each burgers}}
+		{{#unless this.devoured}}
+			<li>
+				{{this.name}}
+			</li>
+		{{/unless}}
+	{{/each}}
+</ul>
+
+<h2>Burgers Devoured</h2>
