@@ -1,11 +1,11 @@
 var app = require("express");
 var router = app.Router();
 
-var burger = require("../models.burger.js");
+var burger = require("../models/burger.js");
 
 router.get("/", function(req, res) {
 	burger.selectAll(function(data){
-		vars hbsObj = {
+		var hbsObj = {
 			burgers: data
 		};
 		res.render("index", hbsObj);
@@ -29,3 +29,5 @@ router.put("/:id", function(req, res){
 		res.redirect("/");
 	});
 });
+
+module.exports = router;
