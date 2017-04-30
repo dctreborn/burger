@@ -2,70 +2,74 @@ var connection = require("../config/connection.js");
 
 // Helper function for SQL syntax.
 function printQuestionMarks(num) {
-  var arr = [];
+    var arr = [];
 
-  for (var i = 0; i < num; i++) {
-    arr.push("?");
-  }
+    for (var i = 0; i < num; i++) {
+        arr.push("?");
+    }
 
-  return arr.toString();
+    return arr.toString();
 }
 
 // Helper function for SQL syntax.
 function objToSql(ob) {
-  var arr = [];
+    var arr = [];
 
-  for (var key in ob) {
-    if (Object.hasOwnProperty.call(ob, key)) {
-      arr.push(key + "=" + ob[key]);
+    for (var key in ob) {
+        if (Object.hasOwnProperty.call(ob, key)) {
+            arr.push(key + "=" + ob[key]);
+        }
     }
-  }
 
-  return arr.toString();
+    return arr.toString();
 }
 
 var orm = {
-    selectAll: function(table, cb) {
-    	var query = "SELECT * FROM " + table;
-
-        console.log(query);
-
-    	connection.query(query, function(err, results){
-    		if (err) throw err;
-
-    		cb(results);
-    	});
-    },
-    insertOne: function(table, cols, values, cb) {
-    	//INSERT INTO tablename (variables) VALUES (values)
-    	var query = "INSERT INTO ";
-        query += table;
-        query += " (" + cols.toString() + ") ";
-        query += "VALUES";
-        query += " (" + printQuestionMarks(values.length) + ") ";
-
-        console.log(query);
-
-        connection.query(query, function(err, results){
-            if (err) throw err;
-
-            cb(results);
+    selectAll: function(tableInput, cb) {
+        var queryString = "SELECT * FROM " + tableInput + ";";
+        connection.query(queryString, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            cb(result);
         });
     },
-    updateOne: function(table, objColVals, condition, cd) {
-        //'UPDATE users SET foo = ?, bar = ?, baz = ? WHERE id = ?'
-    	var query = "SET";
-        query += objToSql(objColVals);
-        query += " WHERE " + condition;
+    insertOne: function(table, cols, vals, cb) {
+        var queryString = "INSERT INTO " + table;
 
-        console.log(query);
+        queryString += " (";
+        queryString += cols.toString();
+        queryString += ") ";
+        queryString += "VALUES (";
+        queryString += printQuestionMarks(vals.length);
+        queryString += ") ";
 
-        connection.query(query, function(err, results){
-            if (err) throw err;
+        console.log(queryString);
 
-            cb(results);
+        connection.query(queryString, vals, function(err, result) {
+            if (err) {
+                throw err;
+            }
+            cb(result);
         });
-    }
+    },
+    updateOne: function(table, objColVals, condition, cb) {
+        var queryString = "UPDATE " + table;
+
+        queryString += " SET ";
+        queryString += objToSql(objColVals);
+        queryString += " WHERE ";
+        queryString += condition;
+
+        console.log(queryString);
+        connection.query(queryString, function(err, result) {
+            if (err) {
+                throw err;
+            }
+
+            cb(result);
+        });
+    },
 };
 
 module.exports = orm;

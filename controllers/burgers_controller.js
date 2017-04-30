@@ -1,5 +1,5 @@
-var app = require("express");
-var router = app.Router();
+var express = require("express");
+var router = express.Router();
 
 var burger = require("../models/burger.js");
 
@@ -8,13 +8,14 @@ router.get("/", function(req, res) {
 		var hbsObj = {
 			burgers: data
 		};
+		console.log(data);
 		res.render("index", hbsObj);
 	});
 });
 
 router.post("/", function(req, res){
-	burger.create(["burger_name", "devoured"],
-		[req.body.burger_name, req.body.devoured],
+	burger.insertOne(["burger_name", "devoured"],
+		[req.body.burger_name, false],
 		function(){
 			res.redirect("/");
 		});
@@ -23,7 +24,7 @@ router.post("/", function(req, res){
 router.put("/:id", function(req, res){
 	var condition = "id = " + req.params.id;
 
-	burger.update({
+	burger.updateOne({
 		devoured: req.body.devoured
 	}, condition, function(){
 		res.redirect("/");
